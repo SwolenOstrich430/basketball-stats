@@ -10,14 +10,14 @@ erDiagram
         id bigint PK "NN"
         city city "NN"
         mascot varchar(20) "NN" 
-        is_active boolean "NN"
     }
 
     DIM_ROSTERS {
         team_id bigint FK "NN" 
         player_id bigint FK "NN"
-        start_year year "NN" 
-        end_year year "NN"
+        season_start_year year "NN" 
+        season_end_year year "NN"
+        sequence year "NN"
     }
 
     DIM_PLAYERS {
