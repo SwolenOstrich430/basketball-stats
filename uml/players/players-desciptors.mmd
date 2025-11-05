@@ -1,11 +1,25 @@
 ---
-title: Player Descriptors
+title: Player-Descriptors
 ---
+
 erDiagram
+    DIM_PLAYERS }|--|{ DIM_PLAYERS_POSITIONS : play
+    DIM_POSITIONS ||--|{ DIM_PLAYERS_POSITIONS : makeup
     DIM_PLAYERS }|--|{ DIM_PLAYERS_NATIONALITIES : have
 
-    DIM_PLAYERS_COUNTRIES {
+    DIM_PLAYERS_NATIONALITIES {
         id bigint PK "NN" 
         player_id bigint FK "NN" 
         country country "NN"
+    }
+
+    DIM_PLAYERS_POSITIONS {
+        player_id bigint PK, FK "NN" 
+        position_id bigint PK, FK "NN"
+    }
+
+    DIM_POSITIONS {
+        id bigint PK "NN" 
+        name varchar(20) "NN" 
+        identifier varchar(2) "NN"
     }
