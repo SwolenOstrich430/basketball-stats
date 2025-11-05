@@ -1,0 +1,59 @@
+---
+title: Players Stats
+---
+
+erDiagram
+    DIM_PLAYERS ||--|{ FACT_FLAT_STATS_COUNTING : accrue
+    DIM_GAMES ||--|{ FACT_FLAT_STATS_COUNTING : represent
+    DIM_STAT_OFFENSE_SCORING ||--|{ FACT_FLAT_STATS_COUNTING : represents
+    DIM_STAT_OFFENSE_NON_SCORING ||--|{ FACT_FLAT_STATS_COUNTING : represents
+    DIM_STAT_DEFENSE ||--|{ FACT_FLAT_STATS_COUNTING : represents
+    DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_OFFENSE_SCORING : describe 
+    DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_OFFENSE_NON_SCORING : describe 
+    DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_DEFENSE : describe 
+
+    FACT_FLAT_STATS_COUNTING {
+        game_id bigint FK "NN"
+        player_id bigint FK "NN" 
+        starting boolean "NN"
+        mp float "NN" 
+        stat_offense_scoring_id int FK "NN"
+        stat_offense_non_scoring int FK "NN"
+        stat_defense_id int FK "NN"
+    }
+
+    DIM_STAT_OFFENSE_SCORING {
+        id int "NN"
+        fgm_2p int "NN"
+        fga_2p int "NN"
+        fgm_3p int "NN"
+        fga_3p int "NN"
+        ftm int "NN"
+        fta int "NN"
+    }
+
+    DIM_STAT_OFFENSE_NON_SCORING {
+        id int "NN"
+        orb int "NN" 
+        ast int "NN"
+        tov int "NN"
+        of int "NN"
+    }
+
+    DIM_STAT_DEFENSE {
+        id int "NN"
+        df int "NN"
+        stl int "NN"
+        blk int "NN"
+        drb int "NN"
+    }
+
+    DIM_STAT_ATTRIBUTES {
+        id bigint PK "NN" 
+        display_name varchar(35) "NN" 
+        description varchar(140) "NN"
+        field_identifier varchar(10) "NN"
+        counting boolean "NN"
+        aggregate boolean "NN" 
+        advanced boolean "NN"
+    }

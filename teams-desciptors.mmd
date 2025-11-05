@@ -1,0 +1,32 @@
+---
+title: Team Descriptors
+---
+
+erDiagram
+    DIM_TEAMS }|--|{ DIM_ARENAS : play-in
+    DIM_ARENAS ||--|| DIM_ADDRESSES : exist-at
+    DIM_TEAMS ||--o{ DIM_TEAM_LINEAGES : could-have-been
+    
+    DIM_ARENAS {
+        id bigint PK "NN"
+        name varchar(255) "NN"
+        is_active boolean "NN"
+        address_id bigint FK "NN"
+    }
+
+    DIM_ADDRESSES {
+        id bigint PK "NN"
+        address_1 varchar(255) "NN"
+        address_2 varchar(255) "NN"
+        city city "NN" 
+        state state "NN" 
+        country country "NN" 
+        latitude float "NN" 
+        longitude float "NN"
+    }
+
+    DIM_TEAM_LINEAGES {
+        team_id bigint FK "NN" 
+        ancesor_id bigint FK "NN"
+        transfer_date timestamp "NN"
+    }

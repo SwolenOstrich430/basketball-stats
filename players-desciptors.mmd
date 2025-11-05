@@ -1,0 +1,11 @@
+---
+title: Player Descriptors
+---
+erDiagram
+    DIM_PLAYERS }|--|{ DIM_PLAYERS_NATIONALITIES : have
+
+    DIM_PLAYERS_COUNTRIES {
+        id bigint PK "NN" 
+        player_id bigint FK "NN" 
+        country country "NN"
+    }

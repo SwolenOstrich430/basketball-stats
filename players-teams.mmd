@@ -1,0 +1,30 @@
+---
+title: Players and Teams 
+---
+
+erDiagram
+    DIM_TEAMS ||--|{ DIM_ROSTERS : are-comprised-of
+    DIM_ROSTERS }|--|{ DIM_PLAYERS : are-comprised-of
+
+    DIM_TEAMS {
+        id bigint PK "NN"
+        city city "NN"
+        mascot varchar(20) "NN" 
+        is_active boolean "NN"
+    }
+
+    DIM_ROSTERS {
+        team_id bigint FK "NN" 
+        player_id bigint FK "NN"
+        start_year year "NN" 
+        end_year year "NN"
+    }
+    
+    DIM_PLAYERS {
+        id bigint PK "NN"
+        first_name varchar(20) "NN"
+        last_name varchar(20) "NN" 
+        height_meters float "NN" 
+        weight_grams float "NN"
+        birth_date timestamp "NN"
+    }
