@@ -48,9 +48,9 @@ GCP | $200 dollar credit |
 
 #### ERD 
 * Teams
-  * [Teams and Players](./uml/teams/teams-players.mmd)
-  * [Teams Misc. Attributes](./uml/teams/teams-desciptors.mmd)
-  * [Games and Matchups](./uml/teams/teams-games.mmd)
+  * [Teams and Players](./docs/database/erd/teams/teams-players.mmd)
+  * [Teams Misc. Attributes](./docs/database/erd/teams/teams-desciptors.mmd)
+  * [Games and Matchups](./docs/database/erd/teams/teams-games.mmd)
 * Players
-  * [Player Stats](./uml/players/players-stats.mmd)
-  * [Players Misc. Attributes](./uml/players/players-desciptors.mmd)
+  * [Player Stats](./docs/database/erd/players/players-stats.mmd)
+  * [Players Misc. Attributes](./docs/database/erd/players/players-desciptors.mmd)
