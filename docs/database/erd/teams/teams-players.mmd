@@ -4,20 +4,26 @@ title: Players and Teams
 
 erDiagram
     DIM_TEAMS ||--|{ DIM_ROSTERS : are-comprised-of
+    DIM_SEASONS ||--|{ DIM_ROSTERS : are-comprised-of
     DIM_ROSTERS }|--|{ DIM_PLAYERS : are-comprised-of
 
     DIM_TEAMS {
         id bigint PK "NN"
-        city city "NN"
+        location varchar(20) "NN"
         mascot varchar(20) "NN" 
     }
 
+    DIM_SEASONS {
+        id bigint PK "NN" 
+        start_year year "NN" 
+        end_year year "NN"
+    }
+
     DIM_ROSTERS {
+        id bigint PK "NN"
         team_id bigint FK "NN" 
         player_id bigint FK "NN"
-        season_start_year year "NN" 
-        season_end_year year "NN"
-        sequence year "NN"
+        season_id bigint FK "NN"
     }
 
     DIM_PLAYERS {

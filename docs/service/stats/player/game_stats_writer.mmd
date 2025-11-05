@@ -1,0 +1,15 @@
+classDiagram
+    class GameStatsWriter {
+        -PlayerRepository player_repo
+        -CountingStatsRepository count_stat_repo 
+        -AggregateStatsRepository agg_stat_repo
+        -AdvancedStatsRepository adv_stat_rep
+
+        +create_game_counting_stats(CreateGameStatsRequest create_request) : void
+        +create_game_counting_stats(List<CreateGameStatsRequest> stats) : void
+    }
+
+    GameStatsWriter : #validate_game_counting_stats_create(
+        CreateGameStatsRequest create_request
+    ) : void
+    

@@ -1,0 +1,51 @@
+classDiagram
+
+    class GameStatsProvider {
+        -PlayerRepository player_repo
+        -CountingStatsRepository count_stat_repo 
+        -AggregateStatsRepository agg_stat_repo
+        -AdvancedStatsRepository adv_stat_repo
+        
+        #list_counting_stats_by_date(Date start_date, Date end_date) : CountingStatsResponse
+        #list_aggregate_stats_by_date(Date start_date, Date end_date) : AggregateStatsResponse
+        #list_advanced_stats_by_date(Date start_date, Date end_date) : AdvancedStatsResponse
+    }
+
+    GameStatsProvider : +list_stats(
+        StatsSearchOptions search_options,
+        StatsDisplayOptions display_options,
+        List<StatType> stat_types
+    ) : StatsResponse
+
+    class SeasonStatsProvider {
+        -GameStatsProvider statProvider 
+        -SeasonService seasonService
+
+        +list_stats(StatSearchOptions search_options) : SeasonStatsResponse
+    }
+
+    class StatsResponse {
+        -CountingStatsResponse countingStats
+        -AggregateStatsResponse aggregateStats
+        -AdvancedStats advancedStats 
+    }
+
+    class CountingStatsResponse {
+        -int fgm_2p 
+        -int fga_2p
+        -int fgm_3p  
+        -int fga_3p  
+        -int ftm  
+        -int fta  
+        -int orb   
+        -int ast  
+        -int tov  
+        -int of  
+        -int df  
+        -int stl  
+        -int blk  
+        -int drb  
+    }
+
+    class AggregateStatsResponse {}
+    class AdvancedStatsResponse {}

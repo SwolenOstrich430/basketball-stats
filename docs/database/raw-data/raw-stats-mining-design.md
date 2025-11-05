@@ -31,6 +31,7 @@ Prepared by Peter Connelly
         - [Aggregate Stats Schema](#aggregate-stats-schema)
         - [Advanced Stats Schema](#advanced-stats-schema)
     - [2.3 Data Scraping](#23-data-scraping)
+      - [Interface](#interface)
       - [2.3.1 Client Library](#231-client-library)
     - [2.2 Selected Viewpoints](#22-selected-viewpoints)
       - [2.2.1 Context](#221-context)
@@ -187,6 +188,8 @@ All tracked statistics will be stored in the `DIM_STAT_ATTRIBUTES` table. This w
 
 
 ### 2.3 Data Scraping 
+
+#### Interface 
 
 #### 2.3.1 Client Library
 💬 _Defines key stakeholders and their design-related interests._

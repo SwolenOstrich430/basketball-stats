@@ -1,0 +1,7 @@
+classDiagram
+    class SeasonStatsProvider {
+        -GameStatsProvider statProvider 
+        -SeasonService seasonService
+
+        +list_stats(StatSearchOptions search_options) : SeasonStatsResponse
+    }
