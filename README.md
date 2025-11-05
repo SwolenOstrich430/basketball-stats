@@ -39,20 +39,3 @@ GCP | $200 dollar credit |
 ### Database 
 * MySQL/Postgres (used at previous job)
 * Oracle/SQL Server (need to learn these for my new job)
-
-## UML 
-
-teams 
-players  
-team_stats 
-    - flat_game (table)
-    - agg_season (view)
-player_stats
-    - flat_game (table)
-    - agg_season (view)
-    - agg_career (view)
-    - agg_last_n_games (view)
-    - agg_last_n_dates (view)
-stat_masks/category_rankings (fantasy stat rules)
-
-
