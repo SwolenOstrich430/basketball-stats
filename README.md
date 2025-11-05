@@ -9,8 +9,14 @@
 ### Features
 
 #### Player vs. Team Matchups 
-#### Player vs. Player Matchups 
-#### 
+
+#### List Player Stats 
+* Counting 
+* Aggregate 
+* Advanced
+
+#### Explanation of Advanced Stats 
+
 
 ## Data 
 
