@@ -39,3 +39,12 @@ GCP | $200 dollar credit |
 ### Database 
 * MySQL/Postgres (used at previous job)
 * Oracle/SQL Server (need to learn these for my new job)
+
+#### UML 
+* Teams
+  * [Teams and Players](./uml/teams/teams-players.mmd)
+  * [Teams Misc. Attributes](./uml/teams/teams-desciptors.mmd)
+  * [Games and Matchups](./uml/teams/teams-games.mmd)
+* Players
+  * [Player Stats](./uml/players/players-stats.mmd)
+  * [Players Misc. Attributes](./uml/players/players-desciptors.mmd)
