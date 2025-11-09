@@ -3,23 +3,27 @@ title: Player-Descriptors
 ---
 
 erDiagram
-    DIM_PLAYERS }|--|{ DIM_PLAYERS_POSITIONS : play
-    DIM_POSITIONS ||--|{ DIM_PLAYERS_POSITIONS : makeup
-    DIM_PLAYERS }|--|{ DIM_PLAYERS_NATIONALITIES : have
+    dim_players }|--|{ dim_players_positions : play
+    dim_players }|--|{ dim_players_nationalities : have
 
-    DIM_PLAYERS_NATIONALITIES {
+    dim_players {
+        id bigint PK "NN"
+        first_name varchar(20) "NN"
+        last_name varchar(20) "NN" 
+        birth_date timestamp "NN"
+    }
+    
+    dim_players_nationalities {
         id bigint PK "NN" 
         player_id bigint FK "NN" 
         country country "NN"
+        created_at timestamp "NN"
+        updated_at timestamp "NN"
     }
 
-    DIM_PLAYERS_POSITIONS {
-        player_id bigint PK, FK "NN" 
-        position_id bigint PK, FK "NN"
-    }
-
-    DIM_POSITIONS {
-        id bigint PK "NN" 
-        name varchar(20) "NN" 
-        identifier varchar(2) "NN"
-    }
+    %% TODO: MOVE THIS TO ROSTER 
+    %% dim_players_positions {
+    %%     player_id bigint PK, FK "NN" 
+    %%     position_id bigint PK, FK "NN"
+    %%     season_id bigint PK, FK "NN"
+    %% }

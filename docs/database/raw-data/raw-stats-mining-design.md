@@ -31,8 +31,26 @@ Prepared by Peter Connelly
         - [Aggregate Stats Schema](#aggregate-stats-schema)
         - [Advanced Stats Schema](#advanced-stats-schema)
     - [2.3 Data Scraping](#23-data-scraping)
-      - [Interface](#interface)
-      - [2.3.1 Client Library](#231-client-library)
+      - [2.3.1 Basketball Reference Client Library](#231-basketball-reference-client-library)
+        - [API](#api)
+      - [2.3.2 Team Data](#232-team-data)
+      - [2.3.3 Player Data](#233-player-data)
+        - [Table: dim\_players\_nationalities](#table-dim_players_nationalities)
+        - [Table: dim\_players](#table-dim_players)
+        - [Table: dim\_positions](#table-dim_positions)
+      - [2.3.4 Roster Data](#234-roster-data)
+        - [Table: dim\_seasons](#table-dim_seasons)
+        - [Table: dim\_rosters](#table-dim_rosters)
+        - [Table: dim\_rosters\_players\_bios](#table-dim_rosters_players_bios)
+      - [2.3.5 Game-by-Game Stats](#235-game-by-game-stats)
+        - [Table: fact\_flat\_stats\_counting](#table-fact_flat_stats_counting)
+        - [Table: dim\_stat\_offense\_scoring](#table-dim_stat_offense_scoring)
+        - [Table: dim\_stat\_offense\_non\_scoring](#table-dim_stat_offense_non_scoring)
+        - [Table: dim\_stat\_defense](#table-dim_stat_defense)
+    - [2.4 ETL Flow](#24-etl-flow)
+      - [2.4.1 Long-Term Storage](#241-long-term-storage)
+      - [2.4.2 Data Transformation](#242-data-transformation)
+      - [2.4.3 Data Load](#243-data-load)
     - [2.2 Selected Viewpoints](#22-selected-viewpoints)
       - [2.2.1 Context](#221-context)
       - [2.2.2 Composition](#222-composition)
@@ -143,7 +161,7 @@ Users will want to be able to view:
 * Game-by-game statistics for players and teams 
   
 #### 2.2.1 Teams and Players
-Because this app's main purpose will be to analyze player and team statistics, we aren't going to be too concerned with historical and descriptive data like team lineage, colors, oownership, etc. 
+Because this app's main purpose will be to analyze player and team statistics, we aren't going to be too concerned with historical and descriptive data like team lineage, colors, ownership, etc. 
 
 For the most part, we want to know who's on which team, who played who when, and if someone moved teams at any point.
 
@@ -189,9 +207,106 @@ All tracked statistics will be stored in the `DIM_STAT_ATTRIBUTES` table. This w
 
 ### 2.3 Data Scraping 
 
-#### Interface 
+#### 2.3.1 Basketball Reference Client Library
+The [Basketball Reference Web Scraper](https://pypi.org/project/basketball-reference-scraper/) offers a simple and easy-to-use client for accessing data from the site. 
 
-#### 2.3.1 Client Library
+##### API
+The following methods will be of interest now and for future features:
+* [Get Roster](https://pypi.org/project/basketball-reference-scraper/)
+* [Get Player Stats](https://pypi.org/project/basketball-reference-scraper/)
+* [Get Game Logs](https://pypi.org/project/basketball-reference-scraper/)
+* [Get Schedule](https://pypi.org/project/basketball-reference-scraper/)
+* [Get Box Score](https://pypi.org/project/basketball-reference-scraper/)
+* [Get Play by Play](https://pypi.org/project/basketball-reference-scraper/)
+* [Get Shot Chart](https://github.com/vishaalagartha/basketball_reference_scraper/blob/master/API.md#shot-charts)
+* [Get Team Misc.](https://github.com/vishaalagartha/basketball_reference_scraper/blob/master/API.md#shot-charts)
+* [Get Roster Stats](https://github.com/vishaalagartha/basketball_reference_scraper/blob/master/API.md#shot-charts)
+
+In the following sections, we'll describe how we intend to use each of the above features, and what data is of interest for each feature. 
+
+#### 2.3.2 Team Data
+
+#### 2.3.3 Player Data 
+##### Table: dim_players_nationalities
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
+| get_roster(team, season) | NATIONALITY | string | country | country (enum) |
+| get_roster(team, season) | PLAYER | string | player_id | bigint
+
+##### Table: dim_players
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
+| get_roster(team, season) | PLAYER | string | first_name | string |
+| get_roster(team, season) | PLAYER | string | last_name | string |
+| get_roster(team, season) | BIRTH_DATE | date | birth_date | date |
+
+##### Table: dim_positions
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
+| get_roster(team, season) | POS | string | identifier | string
+
+#### 2.3.4 Roster Data 
+##### Table: dim_seasons
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
+| get_roster(team, season) | SEASON_END_YEAR | string | start_year | year
+| get_roster(team, season) | SEASON_END_YEAR | string | end_year | year
+
+##### Table: dim_rosters
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
+| get_roster(team, season) | TEAM | string | season_id | bigint
+| get_roster(team, season) | SEASON_END_YEAR | string | season_id | bigint
+
+##### Table: dim_rosters_players_bios
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
+| get_roster(team, season) | PLAYER | string | player_id | bigint
+| get_roster(team, season) | NUMBER | int | jersey_number | int |
+| get_roster(team, season) | HEIGHT | int (inches) | height | float (meters) |
+| get_roster(team, season) | WEIGHT | int (inches) | weight | float (grams) |
+| get_roster(team, season) | POS | int (inches) | position_ids | array<int> |
+
+
+#### 2.3.5 Game-by-Game Stats 
+
+##### Table: fact_flat_stats_counting
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
+| --- | --- | --- | --- | --- | --- | 
+| get_game_logs(name, start_date, end_date, playoffs=False) | GS | bool | starting | bool | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | MP | int | mp | int | |
+
+##### Table: dim_stat_offense_scoring
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
+| --- | --- | --- | --- | --- | --- | 
+| get_game_logs(name, start_date, end_date, playoffs=False) | FG|3PA|3P | int | fgm_2p | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | FGA|3PA|3P | int | fga_2p | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | 3PA | int | fgm_3p | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | 3P | int | fgm_3p | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | FT | int | ftm | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | FTM | int | ftm | int | |
+
+##### Table: dim_stat_offense_non_scoring
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
+| --- | --- | --- | --- | --- | --- | 
+| get_game_logs(name, start_date, end_date, playoffs=False) | ORB | int | orb | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | AST | int | ast | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | TOV | int | tov | int | |
+
+##### Table: dim_stat_defense
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
+| --- | --- | --- | --- | --- | --- | 
+| get_game_logs(name, start_date, end_date, playoffs=False) | STL | int | stl | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | BLK | int | blk | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | DRB | int | drb | int | |
+
+### 2.4 ETL Flow
+#### 2.4.1 Long-Term Storage 
+
+#### 2.4.2 Data Transformation 
+
+#### 2.4.3 Data Load
+
 💬 _Defines key stakeholders and their design-related interests._
 
 ➥ Identify stakeholder types (e.g., users, developers, operators), their main concerns (e.g., availability, maintainability, risk mitigation) and the viewpoints or design elements of this document that address them.
