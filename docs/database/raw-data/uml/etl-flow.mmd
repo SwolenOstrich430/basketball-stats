@@ -1,0 +1,31 @@
+---
+title: Basic ETL Flow
+---
+flowchart LR
+    subgraph s1["Extract Job"]
+        cron["Cron Job"] --> sdc["Start Data Ingest"]
+        sdc --> gdp["Get Data Provider"]
+        gdp --> sdp["Data Provider Ingest"]
+        sdp --> dps["Move to Flat File"]
+        dps --> ptcs["Cloud Storage Raw Folder Put"]
+        ptcs --> stj["Trigger Transform Job"]
+    end
+
+    s1 --> s2
+
+    subgraph s2["Transform Job"]
+        dn["Download Raw File"] --> fndp["Find Provider"] 
+        fndp --> prvdr["Invoke Provider.transform(file)"]
+        prvdr --> wcnf["Write to New File"]
+        wcnf --> ld["Cloud Storage Transform File Put"]
+        ld --> trglj["Trigger Load Job"]
+    end 
+
+    s2 --> s3
+
+    subgraph s3["Load Job"]
+        dnf["Download Transformed File"] --> fndwr["Find Writer"]
+        fndwr --> wrtfldb["Write File to Database"]
+        wrtfldb --> vldwr["Validate Write to Database"]
+        vldwr --> lgrs["Log Results"]
+    end 

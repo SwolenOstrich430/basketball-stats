@@ -3,16 +3,16 @@ title: Players Stats
 ---
 
 erDiagram
-    DIM_PLAYERS ||--|{ FACT_FLAT_STATS_COUNTING : accrue
-    DIM_GAMES ||--|{ FACT_FLAT_STATS_COUNTING : represent
-    DIM_STAT_OFFENSE_SCORING ||--|{ FACT_FLAT_STATS_COUNTING : represents
-    dim_stat_offense_non_scoring ||--|{ FACT_FLAT_STATS_COUNTING : represents
-    DIM_STAT_DEFENSE ||--|{ FACT_FLAT_STATS_COUNTING : represents
-    DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_OFFENSE_SCORING : describe 
-    DIM_STAT_ATTRIBUTES ||--|| dim_stat_offense_non_scoring : describe 
-    DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_DEFENSE : describe 
+    dim_players ||--|{ fact_flat_counting_stats : accrue
+    dim_games ||--|{ fact_flat_counting_stats : represent
+    dim_stat_offense ||--|{ fact_flat_counting_stats : represents
+    dim_stat_offense_non_scoring ||--|{ fact_flat_counting_stats : represents
+    dim_stat_defense ||--|{ fact_flat_counting_stats : represents
+    dim_stat_attributes ||--|| dim_stat_offense : describe 
+    dim_stat_attributes ||--|| dim_stat_offense_non_scoring : describe 
+    dim_stat_attributes ||--|| dim_stat_defense : describe 
 
-    FACT_FLAT_STATS_COUNTING {
+    fact_flat_counting_stats {
         game_id bigint FK "NN"
         player_id bigint FK "NN" 
         starting boolean "NN"
