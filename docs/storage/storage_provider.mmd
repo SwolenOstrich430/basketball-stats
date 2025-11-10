@@ -1,0 +1,15 @@
+classDiagram
+    class Bucket{
+      +String name
+      +getName() : String 
+    }
+
+    class StorageProvider{
+      +create_bucket(String bucket_name) : boolean
+      +bucket_exists(String bucket_name) : boolean
+      +list_buckets() : List<Bucket>
+      +upload_file(String local_path, String target_path) : boolean
+      +file_exists(String target_path) : boolean
+      +download_file(String local_path, String target_path) : boolean
+      +delete_file(String target_path) : boolean
+    }

@@ -34,6 +34,7 @@ Prepared by Peter Connelly
       - [2.3.1 Basketball Reference Client Library](#231-basketball-reference-client-library)
         - [API](#api)
       - [2.3.2 Team Data](#232-team-data)
+        - [Manual Entry](#manual-entry)
       - [2.3.3 Player Data](#233-player-data)
         - [Table: dim\_players\_nationalities](#table-dim_players_nationalities)
         - [Table: dim\_players](#table-dim_players)
@@ -225,7 +226,74 @@ The following methods will be of interest now and for future features:
 In the following sections, we'll describe how we intend to use each of the above features, and what data is of interest for each feature. 
 
 #### 2.3.2 Team Data
-
+##### Manual Entry
+| Team Name | Identifier |
+| --- | --- |
+ATLANTA HAWKS | ATL
+ST. LOUIS HAWKS | SLH
+MILWAUKEE HAWKS | MIL
+TRI-CITIES BLACKHAWKS | TCB
+BOSTON CELTICS | BOS
+BROOKLYN NETS | BRK
+NEW JERSEY NETS | NJN
+CHICAGO BULLS | CHI
+CHARLOTTE HORNETS (1988-2004)| CHH
+CHARLOTTE HORNETS (2014-Present)| CHO
+CHARLOTTE BOBCATS | CHA
+CLEVELAND CAVALIERS | CLE
+DALLAS MAVERICKS | DAL
+DENVER NUGGETS | DEN
+DETROIT PISTONS | DET
+FORT WAYNE PISTONS | FWP
+GOLDEN STATE WARRIORS | GSW
+SAN FRANCISCO WARRIORS | SFW
+PHILADELPHIA WARRIORS | PHI
+HOUSTON ROCKETS | HOU
+INDIANA PACERS | IND
+LOS ANGELES CLIPPERS | LAC
+SAN DIEGO CLIPPERS | SDC
+BUFFALO BRAVES | BUF
+LOS ANGELES LAKERS | LAL
+MINNEAPOLIS LAKERS | MIN
+MEMPHIS GRIZZLIES | MEM
+VANCOUVER GRIZZLIES | VAN
+MIAMI HEAT | MIA
+MILWAUKEE BUCKS | MIL
+MINNESOTA TIMBERWOLVES | MIN
+NEW ORLEANS PELICANS | NOP
+NEW ORLEANS/OKLAHOMA CITY HORNETS | NOK
+NEW ORLEANS HORNETS | NOH
+NEW YORK KNICKS | NYK
+OKLAHOMA CITY THUNDER | OKC
+SEATTLE SUPERSONICS | SEA
+ORLANDO MAGIC | ORL
+PHILADELPHIA 76ERS | PHI
+SYRACUSE NATIONALS | SYR
+PHOENIX SUNS | PHO
+PORTLAND TRAIL BLAZERS | POR
+SACRAMENTO KINGS | SAC
+KANSAS CITY KINGS | KCK
+KANSAS CITY-OMAHA KINGS | KCK
+CINCINNATI ROYALS | CIN
+ROCHESTER ROYALS | ROR
+SAN ANTONIO SPURS | SAS
+TORONTO RAPTORS | TOR
+UTAH JAZZ | UTA
+NEW ORLEANS JAZZ | NOJ
+WASHINGTON WIZARDS | WAS
+WASHINGTON BULLETS | WAS
+CAPITAL BULLETS | CAP
+BALTIMORE BULLETS | BAL
+CHICAGO ZEPHYRS | CHI
+CHICAGO PACKERS | CHI
+ANDERSON PACKERS | AND
+CHICAGO STAGS | CHI
+INDIANAPOLIS OLYMPIANS | IND
+SHEBOYGAN RED SKINS | SRS
+ST. LOUIS BOMBERS | SLB
+WASHINGTON CAPITOLS | WAS
+WATERLOO HAWKS | WAT
+SAN DIEGO ROCKETS | SDR
 #### 2.3.3 Player Data 
 ##### Table: dim_players_nationalities
 | Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
@@ -271,36 +339,37 @@ In the following sections, we'll describe how we intend to use each of the above
 #### 2.3.5 Game-by-Game Stats 
 
 ##### Table: fact_flat_stats_counting
-| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
-| --- | --- | --- | --- | --- | --- | 
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type |
+| --- | --- | --- | --- | --- | 
 | get_game_logs(name, start_date, end_date, playoffs=False) | GS | bool | starting | bool | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | MP | int | mp | int | |
 
 ##### Table: dim_stat_offense_scoring
-| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
-| --- | --- | --- | --- | --- | --- | 
-| get_game_logs(name, start_date, end_date, playoffs=False) | FG|3PA|3P | int | fgm_2p | int | |
-| get_game_logs(name, start_date, end_date, playoffs=False) | FGA|3PA|3P | int | fga_2p | int | |
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type |
+| --- | --- | --- | --- | --- | 
+| get_game_logs(name, start_date, end_date, playoffs=False) | FG,3PA,3P | int | fgm_2p | int | |
+| get_game_logs(name, start_date, end_date, playoffs=False) | FGA,3PA,3P | int | fga_2p | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | 3PA | int | fgm_3p | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | 3P | int | fgm_3p | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | FT | int | ftm | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | FTM | int | ftm | int | |
 
 ##### Table: dim_stat_offense_non_scoring
-| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
-| --- | --- | --- | --- | --- | --- | 
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
 | get_game_logs(name, start_date, end_date, playoffs=False) | ORB | int | orb | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | AST | int | ast | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | TOV | int | tov | int | |
 
 ##### Table: dim_stat_defense
-| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | Notes |
-| --- | --- | --- | --- | --- | --- | 
+| Ext. Endpoint | Ext. Field | Ext. Type | Int. Field | Int. Type | 
+| --- | --- | --- | --- | --- | 
 | get_game_logs(name, start_date, end_date, playoffs=False) | STL | int | stl | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | BLK | int | blk | int | |
 | get_game_logs(name, start_date, end_date, playoffs=False) | DRB | int | drb | int | |
 
 ### 2.4 ETL Flow
+
 #### 2.4.1 Long-Term Storage 
 
 #### 2.4.2 Data Transformation 

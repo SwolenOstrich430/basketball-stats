@@ -6,10 +6,10 @@ erDiagram
     DIM_PLAYERS ||--|{ FACT_FLAT_STATS_COUNTING : accrue
     DIM_GAMES ||--|{ FACT_FLAT_STATS_COUNTING : represent
     DIM_STAT_OFFENSE_SCORING ||--|{ FACT_FLAT_STATS_COUNTING : represents
-    DIM_STAT_OFFENSE_NON_SCORING ||--|{ FACT_FLAT_STATS_COUNTING : represents
+    dim_stat_offense_non_scoring ||--|{ FACT_FLAT_STATS_COUNTING : represents
     DIM_STAT_DEFENSE ||--|{ FACT_FLAT_STATS_COUNTING : represents
     DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_OFFENSE_SCORING : describe 
-    DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_OFFENSE_NON_SCORING : describe 
+    DIM_STAT_ATTRIBUTES ||--|| dim_stat_offense_non_scoring : describe 
     DIM_STAT_ATTRIBUTES ||--|| DIM_STAT_DEFENSE : describe 
 
     FACT_FLAT_STATS_COUNTING {
@@ -32,21 +32,21 @@ erDiagram
         fta int "NN"
     }
 
-    DIM_STAT_OFFENSE_NON_SCORING {
+    dim_stat_offense_non_scoring {
         id int "NN"
         orb int "NN" 
         ast int "NN"
         tov int "NN"
     }
 
-    DIM_STAT_DEFENSE {
+    dim_stat_defense {
         id int "NN"
         stl int "NN"
         blk int "NN"
         drb int "NN"
     }
 
-    DIM_STAT_ATTRIBUTES {
+    dim_stat_attributes {
         id bigint PK "NN" 
         display_name varchar(35) "NN" 
         description varchar(140) "NN"
