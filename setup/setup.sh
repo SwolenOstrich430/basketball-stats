@@ -23,7 +23,6 @@ if command -v pipx &> /dev/null; then
     echo "pip is installed."
 else
     echo "pip is not installed. Attempting to install it..."
-    # You can add installation commands here, e.g.:
     brew install pipx
 fi
 
@@ -31,5 +30,20 @@ if ! command -v pipx &> /dev/null
 then
     echo "Error: pip is not installed or not found in your PATH."
     echo "Please install pip or ensure it's added to your system's PATH."
-    exit 1 # Exit with an error code
+    exit 1 
+fi
+
+echo "Checking if Flask Installed"
+if command pipx list | grep flask &> /dev/null; then
+    echo "Flask already installed."
+else 
+    echo "Flask not installed. Attempting to install it..."
+    pipx install Flask
+fi 
+
+if ! command pipx list | grep flask &> /dev/null
+then
+    echo "Error: installing Flask failed."
+    echo "Please ensure it's added to your path."
+    exit 1 
 fi
