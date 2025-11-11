@@ -47,3 +47,18 @@ then
     echo "Please ensure it's added to your path."
     exit 1 
 fi
+
+echo "Checking if Virtual Env Running"
+if command echo $VIRTUAL_ENV | grep basketball-stats/venv &> /dev/null; then
+    echo "Virtual environment already running."
+else 
+    echo "Virtual environmeny not setup. Attempting to create..."
+    python3 -m venv venv
+    source venv/bin/activate
+fi 
+
+if ! command echo $VIRTUAL_ENV | grep basketball-stats/venv &> /dev/null
+then
+    echo "Error: starting virtual env."
+    exit 1 
+fi
