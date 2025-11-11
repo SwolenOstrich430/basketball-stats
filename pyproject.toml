@@ -1,0 +1,8 @@
+[tool.pytest.ini_options] # mandatory section name
+addopts = "-s --no-header --no-summary" # force cmd flags
+testpaths = [ # what directories contain tests
+    "tests",
+]
+pythonpath = [ # what to add to the python path
+    "."
+]
