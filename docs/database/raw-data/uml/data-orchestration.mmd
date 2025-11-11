@@ -1,0 +1,77 @@
+---
+config:
+  theme: redux-dark
+title: ETL Services and Helper Classes
+---
+classDiagram 
+    class EventScheduler{
+        -List~DataOrchestrator~
+
+        +check_events_all : List~Event~
+        +check_events_in_last(TimeUnit time_unit, int n) : List~Event~
+        +check_events_by_date(DateTime start_date, DateTime end_date) : List~Event~
+
+        +schedule_event(TimeInterval interval, DataOrchestratorType data_orchestrator_type) : boolean
+    }
+
+    class DataOrchestrator~T, J~ {
+        -DataOrchestratorType type
+        -DataProvider~T, J~ data_provider
+        -StorageProvider storage_provider
+        -FileProcessor processor
+        -DataWriter~J~ writer 
+
+        +invoke(ServiceRequest request) : List~Event~
+        +extract(TimeInterval interval) : File~T~
+        +transform(File~T~) : File~J~
+        +load(File~J~) : List~J~
+
+        -get_raw_data(TimeInterval, interval)
+        -get_raw_file(List~T~) : File~T~
+        -get_processed_data(List~T~) : List~J~
+        -get_processed_file(File~T~ file) : List~J~
+        -write_processed_data(File~J~) : List~J~
+        -write_processed_data(List~J~) : List~J~
+        -write_processed_data(J) : J
+    }
+
+    class Bucket{
+      +String name
+      +getName() : String 
+    }
+
+    class StorageProvider{
+      +create_bucket(String bucket_name) : boolean
+      +bucket_exists(String bucket_name) : boolean
+      +list_buckets() : List<Bucket>
+      +upload_file(String local_path, String target_path) : boolean
+      +file_exists(String target_path) : boolean
+      +download_file(String local_path, String target_path) : boolean
+      +delete_file(String target_path) : boolean
+    }
+
+    class DataWriter~J~{ 
+        -ResourceRepositry~J~ resourceRepo
+
+        +write_resource(J resource) : J
+        +write_resources(List~J~ resources) : List~J~
+        +validate_write(J resource, J written_resource) : boolean
+    } 
+
+    class DataProvider~T, J~{
+        -ObjectMapper~T, J~ mapper
+
+        +extract_raw_data(TimeInterval interval) : List~T~
+        +process_raw_data(T raw_data) : J
+        +process_raw_data_bulk(List~T~ raw_data) : List~J~
+    }
+
+    class TimeInterval{
+        - DateTime start_date 
+        - DateTime end_date 
+        - TimeUnit time_unit 
+        - int num_units
+
+        +get_start_date
+        +get_end_date
+    }

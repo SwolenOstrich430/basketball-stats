@@ -1,31 +1,44 @@
 ---
+config:
+  theme: redux-dark
 title: Basic ETL Flow
 ---
 flowchart LR
-    subgraph s1["Extract Job"]
-        cron["Cron Job"] --> sdc["Start Data Ingest"]
-        sdc --> gdp["Get Data Provider"]
-        gdp --> sdp["Data Provider Ingest"]
-        sdp --> dps["Move to Flat File"]
-        dps --> ptcs["Cloud Storage Raw Folder Put"]
-        ptcs --> stj["Trigger Transform Job"]
+    subgraph s0["Event Scheduler"]
+        get_events["Get Scheduled Events from DB"] --> for_each_event["For Each Event"]
+        for_each_event --> event_compl["Event Completed Success?"]
+        event_compl --"Yes"--> skip_event["Skip Event"]
+        event_compl --"No"--> event_in_progress["Event In Progress?"]
+        event_in_progress --"Yes"--> skip_event_0["Skip Event"]
+        event_in_progress --> event_scheduled["Event Scheduled?"]
+        event_scheduled --"Yes"--> cool_off_period_passed["Cool Off Period Passed?"]
+        cool_off_period_passed --"No"--> skip_event_1["Skip Event"]
+        cool_off_period_passed --"Yes"--> event_errored["Event Errored?"]
+        event_scheduled --"No"-->event_errored
+        event_errored --"Yes"--> event_errored_x_times["Num Retries >= Allowed Retries?"]
+        event_errored_x_times --"Yes"--> skip_event_2["Skip Event"]
+        event_errored_x_times --"No"--> write_event_triggered["Write Event Triggered to DB"]
+    end 
+    s0--"Job Triggered"-->s1
+    subgraph s1["Job Running"]
+        f_dp["ServiceProvider.find"] --> sp_dne["Service Doesn't Exist"]
+        sp_dne --"No"--> service_does_not_exist_error["Service Does Not Exist Error"]
+        sp_dne --"Yes"--> provider_invoke["Service->invoke"]
+        provider_invoke --> provider_invoke_errored["Service->invoke Errored?"]
+        provider_invoke_errored --"Yes"--> write_event_errored["Write Event Errored to DB"]
+        provider_invoke_errored --"No"--> write_event_completed_success["Write Event Completed Success to DB"]
+        write_event_completed_success --> exit["Exit"]
     end
-
-    s1 --> s2
-
-    subgraph s2["Transform Job"]
-        dn["Download Raw File"] --> fndp["Find Provider"] 
-        fndp --> prvdr["Invoke Provider.transform(file)"]
-        prvdr --> wcnf["Write to New File"]
-        wcnf --> ld["Cloud Storage Transform File Put"]
-        ld --> trglj["Trigger Load Job"]
-    end 
-
-    s2 --> s3
-
-    subgraph s3["Load Job"]
-        dnf["Download Transformed File"] --> fndwr["Find Writer"]
-        fndwr --> wrtfldb["Write File to Database"]
-        wrtfldb --> vldwr["Validate Write to Database"]
-        vldwr --> lgrs["Log Results"]
-    end 
+    provider_invoke --> s2
+    subgraph s2["Extract Job (Service: DataOrchestrator<T, J>)"]
+        dp_extract["DataProvider.extract_raw_data"] --> fp_write["FileProcessor.write"]
+        fp_write --> sp_upload_file("StorageProvider.upload_file")
+        fp_write --> dp_transform["DataProvider.process_raw_data"]
+        dp_transform --> fp_write_tfd["FileProcessor.write"]
+        fp_write_tfd --> sp_upload_file_d["StorageProvider.upload_file"]
+        sp_upload_file_d --> dw_write["Insert Processed Data to DB"]
+        dw_write --> dw_validate_write["Validate Inserts"]
+        dw_validate_write --> inserts_failed["Inserts Failed?"]
+        inserts_failed --"Yes"--> log_inserts_failed["Log Inserts Failed"]
+        inserts_failed --"No"--> exit_1["Exit"]
+    end
