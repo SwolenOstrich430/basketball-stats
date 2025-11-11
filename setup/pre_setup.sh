@@ -18,10 +18,10 @@ then
 fi
 
 echo "Checking if Virtual Env Running"
-if command echo $VIRTUAL_ENV | grep basketball-stats/flask &> /dev/null; then
+if command echo $VIRTUAL_ENV | grep basketball-stats/.venv &> /dev/null; then
     echo "Virtual environment already running."
 else 
     echo "Virtual environmeny not setup. Attempting to create..."
-    python3 -m venv flask
-    source flask/bin/activate
+    python3 -m venv .venv
+    source .venv/bin/activate
 fi 
