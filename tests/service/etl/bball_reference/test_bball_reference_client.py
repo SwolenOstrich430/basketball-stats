@@ -18,10 +18,6 @@ class TestBballReferenceClient():
         df.to_json(GET_ROSTER_RESP_FILE, indent=4) 
 
     @pytest.fixture
-    def mapper(self):
-        return BballReferenceMapper()
-    
-    @pytest.fixture
     def valid_df(self):
         return pd.DataFrame({
             'TEAM': ['CHO', 'CHI'], 
