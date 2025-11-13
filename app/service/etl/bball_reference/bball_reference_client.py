@@ -3,6 +3,7 @@ from datetime import datetime
 
 import pandas as pd 
 from basketball_reference_scraper import teams
+from basketball_reference_scraper import seasons
 
 from app.mapper.etl.bball_reference.bball_reference_mapper import BballReferenceMapper
 from app.dto.etl.bball_reference.team_dto import TeamDto
@@ -16,6 +17,7 @@ class BballReferenceClient():
     def __init__(self):
         self._set_teams_client(teams)
         self._set_roster_client(teams)
+        self._set_season_client(seasons)
         self.mapper = BballReferenceMapper()
 
     # get player information:
@@ -55,12 +57,27 @@ class BballReferenceClient():
             year
         )
     
+    def get_season_schedule(self, year: int = None):
+        return self.mapper.get_games_from_df(
+            self.get_schedule_raw(year)
+        )
+
+    # TODO: currently, this won't include playoffs 
+    def get_schedule_raw(
+        self, 
+        year: int = None
+    ) -> pd.DataFrame:
+        if year is None:
+            year = datetime.now().year
+        
+        return self._get_season_client().get_schedule(year)
+    
     # private 
     
     def _get_teams_client(self) -> ModuleType:
         return self.teams_client
 
-    def _set_teams_client(self, teams):
+    def _set_teams_client(self, teams) -> None:
         assert(hasattr(teams, ("get_team_ratings")))
         self.teams_client = teams
 
@@ -70,3 +87,10 @@ class BballReferenceClient():
     def _set_roster_client(self, roster_client) -> None:
         assert(hasattr(roster_client, ("get_roster")))
         self.roster_client = roster_client
+
+    def _get_season_client(self) -> ModuleType:
+        return self.season_client
+    
+    def _set_season_client(self, season_client) -> None:
+        assert(hasattr(season_client, "get_schedule"))
+        self.season_client = season_client
