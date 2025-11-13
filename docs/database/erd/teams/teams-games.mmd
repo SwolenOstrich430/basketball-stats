@@ -3,16 +3,16 @@ title: Games and Matchups
 ---
 
 erDiagram
-    DIM_MATCHUPS ||--|{ DIM_GAMES : describe 
+    dim_matchups ||--|{ dim_games : describe 
      
-    DIM_GAMES {
+    dim_games {
         id bigint PK "NN"
         matchup_id bigint FK 
         start_time timestamp "NN"
         end_time timestamp "NN"
     }
 
-    DIM_MATCHUPS {
+    dim_matchups {
         id bigint PK "NN"
         home_team_id bigint FK "NN" 
         away_team_id bigint FK "NN"
