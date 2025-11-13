@@ -10,6 +10,7 @@ from app.dto.etl.bball_reference.roster_dto import RosterDto
 
 # TODO: datetime.now().year into util method for get current season
 # TODO: separate out teams, roster, etc. into their own data providers
+# TODO: add and apply validator methods for team and season end year
 class BballReferenceClient():
     
     def __init__(self):
