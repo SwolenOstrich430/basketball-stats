@@ -1,12 +1,12 @@
 ---
-title: Players and Teams 
+title: Players and Teams (Rosters)
 ---
 
 erDiagram
     dim_teams ||--|{ dim_rosters : are-comprised-of
     dim_seasons ||--|{ dim_rosters : are-comprised-of
-    dim_rosters }|--|{ dim_players : are-comprised-of
-    dim_rosters }|--|{ dim_players_rosters_bios : are-comprised-of
+    dim_rosters }|--|{ dim_rosters_players : are-comprised-of
+    dim_rosters_players }|--|{ dim_players 
 
     dim_teams {
         id bigint PK "NN"
@@ -23,13 +23,12 @@ erDiagram
     dim_rosters {
         id bigint PK "NN"
         team_id bigint FK "NN" 
-        player_id bigint FK "NN"
         season_id bigint FK "NN"
-        bio_id bigint FK "NN"
     }
 
-    dim_players_rosters_bios {
-        id bigint PK "NN"
+    dim_rosters_players{
+        roster_id bigint FK "NN"
+        player_id bigint FK "NN"
         number int "NN"
         height_meters float "NN" 
         weight_grams float "NN"
