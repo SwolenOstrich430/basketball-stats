@@ -1,5 +1,4 @@
 attrs==25.4.0
-basketball_reference_scraper==2.0.0
 beautifulsoup4==4.14.2
 blinker==1.9.0
 bs4==0.0.2
