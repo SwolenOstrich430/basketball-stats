@@ -82,7 +82,7 @@ class BballReferenceClient():
       self, 
       game: GameDto     
     ) -> BoxScoreDto:
-        self.mapper.get_box_score_from_dict(
+        return self.mapper.get_box_score_from_dict(
             self.get_box_score_raw(
                 game.start_time,
                 game.matchup.home_team_identifier,

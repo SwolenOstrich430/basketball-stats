@@ -79,7 +79,7 @@ class TestBballReferenceClient():
         assert (len(teams) > 0)
 
         for team in teams:
-            assert isinstance(type(team), type(TeamDto))
+            assert isinstance(team, TeamDto)
 
     def test_get_teams_raw_returns_teams_for_the_current_year_if_year_is_null(self, mocker):
         mock_df = mocker.Mock()
@@ -110,7 +110,7 @@ class TestBballReferenceClient():
             datetime.now().year
         )
 
-        assert isinstance(type(expected_roster), type(RosterDto))
+        assert isinstance(expected_roster, RosterDto)
         mocked_method.assert_called_with(
             self.team_name, 
             datetime.now().year
@@ -129,7 +129,7 @@ class TestBballReferenceClient():
         df = self.client.get_roster_raw(self.team_name)
 
         assert(len(df) > 0)
-        assert isinstance(type(df), type(pd.DataFrame))
+        assert isinstance(df, pd.DataFrame)
 
     def test_get_roster_raw_uses_current_season_if_supplied_is_null(self, mocker):
         mock_client = mocker.Mock()
@@ -149,7 +149,7 @@ class TestBballReferenceClient():
         )
 
         assert(len(df) > 0)
-        assert isinstance(type(df), type(pd.DataFrame))
+        assert isinstance(df, pd.DataFrame)
 
     def test_get_season_returns_a_list_of_game_dtos(self, mocker):
         df = self.test_data['get_schedule_response']
@@ -184,7 +184,7 @@ class TestBballReferenceClient():
 
         df = self.client.get_schedule_raw(year)
 
-        assert isinstance(type(df), type(pd.DataFrame))
+        assert isinstance(df, pd.DataFrame)
         assert df.equals(self.test_data['get_schedule_response'])
         mock_client.get_schedule.assert_called_with(year)
 
@@ -208,7 +208,7 @@ class TestBballReferenceClient():
         )
 
         box_score = self.client.get_box_score(game)
-        assert isinstance(type(box_score), type(BoxScoreDto))
+        assert isinstance(box_score, BoxScoreDto)
 
     def test_get_box_score_raw_returns_a_dict_with_teams_as_keys_and_box_scores_as_data_frames(
         self, 
@@ -229,11 +229,11 @@ class TestBballReferenceClient():
             self.away_team_identifier
         )
 
-        assert isinstance(type(df), type(dict))
+        assert isinstance(df, dict)
         assert(self.home_team_identifier in df)
         assert(self.away_team_identifier in df)
-        assert(isinstance(type(df[self.home_team_identifier]), type(pd.DataFrame)))
-        assert(isinstance(type(df[self.away_team_identifier]), type(pd.DataFrame)))
+        assert(isinstance(df[self.home_team_identifier], pd.DataFrame))
+        assert(isinstance(df[self.away_team_identifier], pd.DataFrame))
         
         mock_client.get_box_scores.assert_called_with(
             self.date, 

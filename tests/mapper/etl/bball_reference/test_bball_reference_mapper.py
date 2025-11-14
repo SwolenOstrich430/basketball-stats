@@ -6,6 +6,7 @@ from app.constant.team import TEAM_TO_TEAM_ABBR
 from app.dto.etl.bball_reference.player_dto import PlayerDto
 from app.dto.etl.bball_reference.roster_dto import RosterDto
 from app.dto.etl.bball_reference.game_stats_dto import GameStatsDto
+from app.dto.etl.bball_reference.box_score_dto import BoxScoreDto
 from app.mapper.etl.bball_reference.bball_reference_mapper import BballReferenceMapper
 
 GET_ROSTER_RESP_FILE = "./tests/data/etl/bball_reference/get_roster_response.json"
@@ -86,6 +87,39 @@ class TestBballReferenceMapper():
 
         self._assert_players_equal_df(players, df)
 
+    def test_get_box_score_from_dict_returns_a_box_score_dto(self):
+        box_score = self.mapper.get_box_score_from_dict(
+            self.test_data['get_box_score_response']
+        )
+
+        assert isinstance(box_score, BoxScoreDto)
+        assert isinstance(box_score.team_1_stats, list)
+        assert isinstance(box_score.team_2_stats, list)
+
+        for game_stats in box_score.team_1_stats:
+            assert isinstance(game_stats, GameStatsDto)
+
+        for game_stats in box_score.team_2_stats:
+            assert isinstance(game_stats, GameStatsDto)
+
+    def test_get_box_score_from_dict_throws_if_provided_dict_isnt_of_length_2(self):
+        with pytest.raises(AssertionError) as exc_info:   
+            self.mapper.get_box_score_from_dict(
+                {}
+            )
+
+    def test_get_box_score_from_dict_throws_if_provided_dict_isnt_of_length_2(self):
+        with pytest.raises(AssertionError) as exc_info:   
+            self.mapper.get_box_score_from_dict(
+                {
+                    'one': [],
+                    'two': pd.DataFrame()
+                }
+            )
+
+    def test_get_box_score_from_dict_throws_if_dict_values_arent_data_frames(self):
+        pass
+    
     def test_get_game_stats_from_series_returns_a_game_stats_dto(self, mapper):
         game_stats = self.mapper.get_game_stats_from_series(
             self.game_stats_series

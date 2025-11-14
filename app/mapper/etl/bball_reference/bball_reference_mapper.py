@@ -62,8 +62,8 @@ class BballReferenceMapper:
         team_idents = list(raw_box_score.keys())
         
         assert(len(team_idents) == 2)
-        assert isinstance(type(team_idents[0]), type(DataFrame))
-        assert isinstance(type(team_idents[1]), type(DataFrame))
+        assert isinstance(raw_box_score[team_idents[0]], DataFrame)
+        assert isinstance(raw_box_score[team_idents[1]], DataFrame)
 
         game_stats_1 = raw_box_score[team_idents[0]].apply(
             lambda row: self.get_game_stats_from_series(row), axis=1
@@ -74,10 +74,10 @@ class BballReferenceMapper:
         ).tolist()
         
         return BoxScoreDto(
-            team_idents[0], 
-            team_idents[1], 
-            game_stats_1, 
-            game_stats_2
+            team_1_identifier=team_idents[0], 
+            team_2_identifier=team_idents[1], 
+            team_1_stats=game_stats_1, 
+            team_2_stats=game_stats_2
         )
 
     def get_game_stats_from_series(
