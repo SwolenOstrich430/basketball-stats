@@ -67,7 +67,8 @@ class BballReferenceClient():
             self.get_schedule_raw(year)
         )
 
-    # TODO: currently, this won't include playoffs 
+    # TODO: currently, this won't include playoffs
+    # TODO: also won't include advanced stats  
     def get_schedule_raw(
         self, 
         year: int = None

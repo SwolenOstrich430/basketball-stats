@@ -1,6 +1,5 @@
 import pytest
 from datetime import datetime 
-import json  
 import pandas as pd 
 from basketball_reference_scraper import teams
 from basketball_reference_scraper import seasons

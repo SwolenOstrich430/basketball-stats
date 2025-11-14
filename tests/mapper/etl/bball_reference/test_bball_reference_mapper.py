@@ -2,11 +2,16 @@ import pandas as pd
 import pytest 
 from datetime import datetime 
 
+from app.constant.team import TEAM_TO_TEAM_ABBR
 from app.dto.etl.bball_reference.player_dto import PlayerDto
 from app.dto.etl.bball_reference.roster_dto import RosterDto
+from app.dto.etl.bball_reference.game_stats_dto import GameStatsDto
 from app.mapper.etl.bball_reference.bball_reference_mapper import BballReferenceMapper
 
 GET_ROSTER_RESP_FILE = "./tests/data/etl/bball_reference/get_roster_response.json"
+GET_SCHEDULE_RESPONSE = "./tests/data/etl/bball_reference/get_schedule_response.json"
+GET_BOX_SCORE_RESPONSE_HOME = "./tests/data/etl/bball_reference/get_box_score_response_home.json"
+GET_BOX_SCORE_RESPONSE_AWAY = "./tests/data/etl/bball_reference/get_box_score_response_away.json"
 TEST_TEAM_IDENTIFIER = "CHI"
 class TestBballReferenceMapper():
     
@@ -25,8 +30,30 @@ class TestBballReferenceMapper():
         self.mapper = BballReferenceMapper()
         self.team_name = TEST_TEAM_IDENTIFIER
         self.test_data = {
-            "get_roster_response": pd.read_json(GET_ROSTER_RESP_FILE)
+            "get_roster_response": pd.read_json(GET_ROSTER_RESP_FILE),
+            "get_schedule_response": pd.read_json(GET_SCHEDULE_RESPONSE),
+            "get_box_score_response": {}
         }
+
+        df1 = self.test_data["get_schedule_response"]
+        self.date = df1.iloc[0]['DATE']
+        self.home_team = df1.iloc[0]['HOME'].upper()
+        self.away_team = df1.iloc[0]['VISITOR'].upper()
+        self.home_team_identifier = TEAM_TO_TEAM_ABBR[self.home_team]
+        self.away_team_identifier = TEAM_TO_TEAM_ABBR[self.away_team]
+
+        self.test_data["get_box_score_response"][self.home_team_identifier] = pd.read_json(
+            GET_BOX_SCORE_RESPONSE_HOME
+        )
+        self.test_data["get_box_score_response"][self.away_team_identifier] = pd.read_json(
+            GET_BOX_SCORE_RESPONSE_AWAY
+        )
+
+        self.game_stats_series = self.test_data["get_box_score_response"][self.home_team_identifier].iloc[0]
+
+        df = self.test_data["get_box_score_response"][self.home_team_identifier]
+        self.dnp_stats = df[df['MP'] == 'Did Not Play'].iloc[0]
+        assert(self.dnp_stats is not None)
 
     def test_get_team_from_df_returns_a_team_dto_when_given_valid_df(
         self,
@@ -58,6 +85,63 @@ class TestBballReferenceMapper():
         players = self.mapper.get_players_from_df(df)
 
         self._assert_players_equal_df(players, df)
+
+    def test_get_game_stats_from_series_returns_a_game_stats_dto(self, mapper):
+        game_stats = self.mapper.get_game_stats_from_series(
+            self.game_stats_series
+        )
+
+        assert isinstance(game_stats, GameStatsDto)
+
+
+    def test_get_game_stats_raw_converts_string_version_of_mp_to_float(self, mapper):
+        game_stats = self.mapper.get_game_stats_from_series(
+            self.game_stats_series
+        )
+
+        assert isinstance(game_stats, GameStatsDto) 
+
+    def test_game_stats_raw_maps_external_vals_to_internval_versions(self):
+        game_stats = self.mapper.get_game_stats_from_series(
+            self.game_stats_series
+        )
+
+        assert game_stats.fgm_2p == (
+            int(self.game_stats_series['FG']) - int(self.game_stats_series['3P'])
+        )
+        game_stats.fgm_2p is not None
+        assert game_stats.fga_2p == (
+            int(self.game_stats_series['FGA']) - int(self.game_stats_series['3PA'])
+        )
+        assert game_stats.fga_2p is not None
+        assert game_stats.ftm == int(self.game_stats_series['FT'])
+        assert game_stats.ftm is not None
+        assert game_stats.fta == int(self.game_stats_series['FTA'])
+        assert game_stats.fta is not None
+        assert game_stats.orb == int(self.game_stats_series['ORB'])
+        assert game_stats.orb is not None
+        assert game_stats.drb == int(self.game_stats_series['DRB'])
+        assert game_stats.drb is not None
+        assert game_stats.ast == int(self.game_stats_series['AST'])
+        assert game_stats.ast is not None
+        assert game_stats.stl == int(self.game_stats_series['STL'])
+        assert game_stats.stl is not None
+        assert game_stats.blk == int(self.game_stats_series['BLK'])
+        assert game_stats.blk is not None
+        assert game_stats.tov == int(self.game_stats_series['TOV'])
+        assert game_stats.tov is not None
+        assert game_stats.pf == int(self.game_stats_series['PF'])
+        assert game_stats.pf is not None
+        assert game_stats.plus_minus == self.game_stats_series['+/-']
+        assert game_stats.plus_minus is not None
+
+    def test_filter_dnp_values_sets_values_to_zero_if_value_is_do_not_play(self):
+        game_stats = self.mapper.get_game_stats_from_series(
+            self.dnp_stats
+        )
+
+        assert game_stats.mp == 0
+        assert self.dnp_stats['MP'].lower() == 'did not play'
 
     def test_get_team_name_by_identifier_raises_value_error_if_identifier_null(
         self,

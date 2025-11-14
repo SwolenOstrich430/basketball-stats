@@ -27,4 +27,4 @@ class GameStatsDto():
         self.blk = int(blk)
         self.tov = int(tov)
         self.pf = int(pf)
-        self.plus_minus = float(plus_minus)
+        self.plus_minus = str(plus_minus)
