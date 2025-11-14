@@ -10,7 +10,8 @@ from basketball_reference_scraper import box_scores
 from app.mapper.etl.bball_reference.bball_reference_mapper import BballReferenceMapper
 from app.dto.etl.bball_reference.team_dto import TeamDto
 from app.dto.etl.bball_reference.roster_dto import RosterDto
-from app.dto.etl.bball_reference.box_score import BoxScoreDto
+from app.dto.etl.bball_reference.box_score_dto import BoxScoreDto
+from app.dto.etl.bball_reference.game_dto import GameDto
 
 # TODO: datetime.now().year into util method for get current season
 # TODO: separate out teams, roster, etc. into their own data providers
@@ -79,8 +80,14 @@ class BballReferenceClient():
     def get_box_score(
       self, 
       game: GameDto     
-    ) -> BoxScoreDto
-        return BoxScoreDto()
+    ) -> BoxScoreDto:
+        self.mapper.get_box_score_from_dict(
+            self.get_box_score_raw(
+                game.start_time,
+                game.matchup.home_team_identifier,
+                game.matchup.away_team_identifier
+            )
+        )
         
     def get_box_score_raw(
         self,

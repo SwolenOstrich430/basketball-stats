@@ -11,6 +11,8 @@ from app.dto.etl.bball_reference.team_dto import TeamDto
 from app.dto.etl.bball_reference.roster_dto import RosterDto
 from app.service.etl.bball_reference.bball_reference_client import BballReferenceClient
 from app.mapper.etl.bball_reference.bball_reference_mapper import BballReferenceMapper
+from app.dto.etl.bball_reference.game_dto import GameDto
+from app.dto.etl.bball_reference.box_score_dto import BoxScoreDto
 
 GET_ROSTER_RESP_FILE = "./tests/data/etl/bball_reference/get_roster_response.json"
 GET_SCHEDULE_RESPONSE = "./tests/data/etl/bball_reference/get_schedule_response.json"
@@ -186,6 +188,28 @@ class TestBballReferenceClient():
         assert isinstance(type(df), type(pd.DataFrame))
         assert df.equals(self.test_data['get_schedule_response'])
         mock_client.get_schedule.assert_called_with(year)
+
+    def test_get_box_score_returns_a_box_score_dto(self, mocker):
+        mock_client = mocker.Mock()
+
+        mock_client.get_box_scores.return_value = self.test_data['get_box_score_response']
+
+        mocker.patch.object(
+            self.client,
+            '_get_stats_client',
+            return_value=mock_client
+        )
+
+        game = GameDto(
+            start_time=self.date, 
+            home_team_name=self.home_team,
+            away_team_name=self.away_team,
+            home_team_identifier=self.home_team_identifier, 
+            away_team_identifier=self.away_team_identifier
+        )
+
+        box_score = self.client.get_box_score(game)
+        assert isinstance(type(box_score), type(BoxScoreDto))
 
     def test_get_box_score_raw_returns_a_dict_with_teams_as_keys_and_box_scores_as_data_frames(
         self, 

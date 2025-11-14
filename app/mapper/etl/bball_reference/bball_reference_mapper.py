@@ -1,10 +1,12 @@
 from pandas import DataFrame
-
+from pandas import Series 
 from app.constant.team import TEAM_TO_TEAM_ABBR
 from app.dto.etl.bball_reference.team_dto import TeamDto
 from app.dto.etl.bball_reference.roster_dto import RosterDto
 from app.dto.etl.bball_reference.player_dto import PlayerDto
 from app.dto.etl.bball_reference.game_dto import GameDto 
+from app.dto.etl.bball_reference.box_score_dto import BoxScoreDto 
+from app.dto.etl.bball_reference.game_stats_dto import GameStatsDto
 
 class BballReferenceMapper:
     def __init__(self):
@@ -55,6 +57,59 @@ class BballReferenceMapper:
             ))
             
         return games 
+    
+    def get_box_score_from_dict(self, raw_box_score: dict) -> BoxScoreDto:
+        team_idents = list(raw_box_score.keys())
+        
+        assert(len(team_idents) == 2)
+        assert isinstance(type(team_idents[0]), type(DataFrame))
+        assert isinstance(type(team_idents[1]), type(DataFrame))
+
+        game_stats_1 = raw_box_score[team_idents[0]].apply(
+            lambda row: self.get_game_stats_from_series(row), axis=1
+        ).tolist()
+
+        game_stats_2 = raw_box_score[team_idents[1]].apply(
+            lambda row: self.get_game_stats_from_series(row), axis=1
+        ).tolist()
+        
+        return BoxScoreDto(
+            team_idents[0], 
+            team_idents[1], 
+            game_stats_1, 
+            game_stats_2
+        )
+
+    def get_game_stats_from_series(
+        self, 
+        raw_game_stats: Series
+    ) -> GameStatsDto:
+        dnp_filtered_stats = raw_game_stats.apply(
+            lambda val: self._filter_dnp_values(val)
+        )
+
+        mp = dnp_filtered_stats['MP']
+        if type(mp) == str and ":" in mp:
+            mp = ".".join(dnp_filtered_stats['MP'].split(":"))
+
+        return GameStatsDto(
+            player=dnp_filtered_stats['PLAYER'],
+            mp=mp,
+            fgm_2p=int(dnp_filtered_stats['FG']) - int(dnp_filtered_stats['3P']),
+            fga_2p=int(dnp_filtered_stats['FGA']) - int(dnp_filtered_stats['3PA']),
+            fgm_3p=dnp_filtered_stats['3P'],
+            fga_3p=dnp_filtered_stats['3PA'],
+            ftm=dnp_filtered_stats['FT'],
+            fta=dnp_filtered_stats['FTA'],
+            orb=dnp_filtered_stats['ORB'],
+            drb=dnp_filtered_stats['DRB'],
+            ast=dnp_filtered_stats['AST'],
+            stl=dnp_filtered_stats['STL'],
+            blk=dnp_filtered_stats['BLK'],
+            tov=dnp_filtered_stats['TOV'],
+            pf=dnp_filtered_stats['PF'],
+            plus_minus=dnp_filtered_stats['+/-']
+        )
 
     def get_team_name_by_identifier(self, identifier: str) -> str:
         if identifier is None:
@@ -80,6 +135,14 @@ class BballReferenceMapper:
         
         raise ValueError(f"Team name: {name} not found.")
 
+    def _filter_dnp_values(self, val):
+        new_val = val 
+        
+        if type(val) == str and val.lower() == 'did not play':
+            new_val = 0 
+
+        return new_val
+    
     def _get_team_map(self) -> dict[str, str]:
         return self.team_map
 

@@ -1,4 +1,4 @@
-class GameStats():
+class GameStatsDto():
     def __init__(
         self, player: str, mp: int, fg: int, fga: int, 
         three_fg: int, three_pga: int, ft: int, fta: int, 
