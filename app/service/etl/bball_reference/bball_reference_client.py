@@ -1,9 +1,11 @@
 from types import ModuleType
 from datetime import datetime
+from datetime import date
 
 import pandas as pd 
 from basketball_reference_scraper import teams
 from basketball_reference_scraper import seasons
+from basketball_reference_scraper import box_scores
 
 from app.mapper.etl.bball_reference.bball_reference_mapper import BballReferenceMapper
 from app.dto.etl.bball_reference.team_dto import TeamDto
@@ -18,6 +20,7 @@ class BballReferenceClient():
         self._set_teams_client(teams)
         self._set_roster_client(teams)
         self._set_season_client(seasons)
+        self._set_stats_client(box_scores)
         self.mapper = BballReferenceMapper()
 
     # get player information:
@@ -72,6 +75,16 @@ class BballReferenceClient():
         
         return self._get_season_client().get_schedule(year)
     
+    def get_box_score_raw(
+        self,
+        date: date,
+        home_team_identifier: str,
+        away_team_identifier: str 
+    ):
+        return self._get_stats_client().get_box_scores(
+            date, home_team_identifier, away_team_identifier
+        )
+    
     # private 
     
     def _get_teams_client(self) -> ModuleType:
@@ -94,3 +107,10 @@ class BballReferenceClient():
     def _set_season_client(self, season_client) -> None:
         assert(hasattr(season_client, "get_schedule"))
         self.season_client = season_client
+
+    def _get_stats_client(self) -> ModuleType:
+        return self.stats_client
+    
+    def _set_stats_client(self, stats_client) -> None:
+        assert(hasattr(stats_client, "get_box_scores"))
+        self.stats_client = stats_client
