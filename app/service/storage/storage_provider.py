@@ -14,10 +14,16 @@ class StorageProvider(IGenericStorageProvider):
             file_name
         )
     
-    def download_file(self, bucket_identifier: str, file_name: str) -> str:
+    def download_file(
+        self, 
+        bucket_identifier: str, 
+        storage_path: str, 
+        local_path: str
+    ):
         return self._get_provider().download_file(
             self._get_bucket_name(bucket_identifier), 
-            file_name
+            storage_path,
+            local_path
         )
     
     def bucket_exists(self, bucket_identifier: str) -> bool:

@@ -7,7 +7,12 @@ class IStorageProvider(ABC):
         pass 
 
     @abstractmethod
-    def download_file(self, bucket_name: str, file_name: str) -> str: 
+    def download_file(
+        self, 
+        bucket_identifier: str, 
+        storage_path: str, 
+        local_path: str
+    ): 
         pass 
 
     @abstractmethod

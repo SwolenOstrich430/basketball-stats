@@ -9,7 +9,12 @@ class IGenericStorageProvider(IStorageProvider):
         pass 
 
     @abstractmethod
-    def download_file(self, bucket_identifier: str, file_name: str) -> str: 
+    def download_file(
+        self, 
+        bucket_identifier: str, 
+        storage_path: str, 
+        local_path: str
+    ): 
         pass 
 
     @abstractmethod

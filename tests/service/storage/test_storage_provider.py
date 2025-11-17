@@ -1,5 +1,4 @@
 import pytest 
-from flask import Flask 
 from app.service.storage.storage_provider import StorageProvider
 from app.service.config.config_provider import ConfigProvider
 
@@ -10,6 +9,7 @@ class TestStorageProvider():
         self.bucket_identifier = "blop"
         self.bucket_name = "blah"
         self.file_name = "bloop"
+        self.local_path = "ham"
     
     def test_upload_file_passes_bucket_and_file_name_to_provider_implementation(self, mocker):
         provider = mocker.Mock()
@@ -54,13 +54,15 @@ class TestStorageProvider():
 
         self.subject.download_file(
             self.bucket_identifier,
-            self.file_name
+            self.file_name,
+            self.local_path
         )
 
         mock_method.assert_called_with(self.bucket_identifier)
         provider.download_file.assert_called_with(
             self.bucket_name,
-            self.file_name
+            self.file_name,
+            self.local_path
         )
 
     def test_bucket_exists_passes_bucket_and_file_name_to_provider_implementation(self, mocker):
