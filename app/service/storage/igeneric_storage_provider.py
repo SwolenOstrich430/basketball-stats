@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from airflow.hooks.base import BaseHook
 from app.service.storage.istorage_provider import IStorageProvider
 from app.service.config.iconfig_provider import IConfigProvider
 
@@ -23,6 +24,10 @@ class IGenericStorageProvider(IStorageProvider):
 
     @abstractmethod
     def file_exists(self, bucket_identifier: str, file_name: str) -> bool: 
+        pass 
+
+    @abstractmethod
+    def get_airflow_hook(self) -> BaseHook:
         pass 
 
     @abstractmethod
