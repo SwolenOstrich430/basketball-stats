@@ -1,0 +1,7 @@
+{
+    "storage": {
+        "buckets": {
+            "etl_upload": "bball/etl/upload"
+        }
+    }
+}
