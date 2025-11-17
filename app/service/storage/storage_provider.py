@@ -10,19 +10,19 @@ class StorageProvider(IGenericStorageProvider):
 
     def upload_file(self, bucket_identifier: str, file_name: str) -> bool:
         return self._get_provider().upload_file(
-            self._get_bucket_name(), 
+            self._get_bucket_name(bucket_identifier), 
             file_name
         )
     
     def download_file(self, bucket_identifier: str, file_name: str) -> str:
         return self._get_provider().download_file(
-            self._get_bucket_name(), 
+            self._get_bucket_name(bucket_identifier), 
             file_name
         )
     
     def file_exists(self, bucket_identifier: str, file_name: str) -> bool:
         return self._get_provider().file_exists(
-            self._get_bucket_name(), 
+            self._get_bucket_name(bucket_identifier), 
             file_name
         )
     
