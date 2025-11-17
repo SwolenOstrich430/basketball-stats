@@ -1,6 +1,7 @@
 from app.service.storage.igeneric_storage_provider import IGenericStorageProvider
 from app.service.storage.istorage_provider import IStorageProvider
 from app.service.config.config_provider import ConfigProvider
+from app.service.storage.gcp.google_storage_provider import GoogleStorageProvider
 
 STORAGE_PREFIX = "storage"
 BUCKETS_PREFIX = "buckets"
@@ -41,9 +42,11 @@ class StorageProvider(IGenericStorageProvider):
         return self._get_config_provider().get(
             STORAGE_PREFIX, BUCKETS_PREFIX, bucket_identifier
         )
-        
+    
+    # returning this for now: can add actual factory methods 
+    # when they're needed 
     def _get_provider(self) -> IStorageProvider:
-        StorageProvider()
+        return GoogleStorageProvider()
 
     def _set_config_provider(self): 
         if not hasattr(self, 'config_provider') or \
