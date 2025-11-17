@@ -11,9 +11,9 @@ class IStorageProvider(ABC):
         pass 
 
     @abstractmethod
-    def bucket_exists(self, bucket_name: str, file_name: str) -> bool:
+    def bucket_exists(self, bucket_name: str) -> bool:
         pass 
-    
+
     @abstractmethod
     def file_exists(self, bucket_name: str, file_name: str) -> bool: 
         pass 

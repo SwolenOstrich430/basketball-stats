@@ -79,14 +79,12 @@ class TestStorageProvider():
         )
 
         self.subject.bucket_exists(
-            self.bucket_identifier,
-            self.file_name
+            self.bucket_identifier
         )
 
         mock_method.assert_called_with(self.bucket_identifier)
         provider.bucket_exists.assert_called_with(
-            self.bucket_name,
-            self.file_name
+            self.bucket_name
         )
 
     def test_download_file_passes_bucket_and_file_name_to_provider_implementation(self, mocker):

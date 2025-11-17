@@ -13,7 +13,7 @@ class IGenericStorageProvider(IStorageProvider):
         pass 
 
     @abstractmethod
-    def bucket_exists(self, bucket_identifier: str, file_name: str) -> bool:
+    def bucket_exists(self, bucket_identifier: str) -> bool:
         pass 
 
     @abstractmethod
