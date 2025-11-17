@@ -20,6 +20,12 @@ class StorageProvider(IGenericStorageProvider):
             file_name
         )
     
+    def bucket_exists(self, bucket_identifier: str, file_name: str) -> bool:
+        return self._get_provider().bucket_exists(
+            self._get_bucket_name(bucket_identifier), 
+            file_name
+        )
+    
     def file_exists(self, bucket_identifier: str, file_name: str) -> bool:
         return self._get_provider().file_exists(
             self._get_bucket_name(bucket_identifier), 

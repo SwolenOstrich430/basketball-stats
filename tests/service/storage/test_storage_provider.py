@@ -63,6 +63,32 @@ class TestStorageProvider():
             self.file_name
         )
 
+    def test_bucket_exists_passes_bucket_and_file_name_to_provider_implementation(self, mocker):
+        provider = mocker.Mock()
+
+        mocker.patch.object(
+            self.subject, 
+            '_get_provider',
+            return_value=provider 
+        )
+
+        mock_method = mocker.patch.object(
+            self.subject, 
+            '_get_bucket_name',
+            return_value=self.bucket_name 
+        )
+
+        self.subject.bucket_exists(
+            self.bucket_identifier,
+            self.file_name
+        )
+
+        mock_method.assert_called_with(self.bucket_identifier)
+        provider.bucket_exists.assert_called_with(
+            self.bucket_name,
+            self.file_name
+        )
+
     def test_download_file_passes_bucket_and_file_name_to_provider_implementation(self, mocker):
         provider = mocker.Mock()
 

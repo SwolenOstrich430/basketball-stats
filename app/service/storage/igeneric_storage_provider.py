@@ -5,15 +5,19 @@ from app.service.config.iconfig_provider import IConfigProvider
 class IGenericStorageProvider(IStorageProvider):
     
     @abstractmethod
-    def upload_file(bucket_identifier: str, file_name: str) -> bool: 
+    def upload_file(self, bucket_identifier: str, file_name: str) -> bool: 
         pass 
 
     @abstractmethod
-    def download_file(bucket_identifier: str, file_name: str) -> str: 
+    def download_file(self, bucket_identifier: str, file_name: str) -> str: 
         pass 
 
     @abstractmethod
-    def file_exists(bucket_identifier: str, file_name: str) -> bool: 
+    def bucket_exists(self, bucket_identifier: str, file_name: str) -> bool:
+        pass 
+
+    @abstractmethod
+    def file_exists(self, bucket_identifier: str, file_name: str) -> bool: 
         pass 
 
     @abstractmethod
@@ -23,7 +27,7 @@ class IGenericStorageProvider(IStorageProvider):
     @abstractmethod
     def _get_provider(self) -> IStorageProvider:
         pass 
-    
+
     @abstractmethod
     def _set_config_provider(self) -> IConfigProvider:
         pass 
