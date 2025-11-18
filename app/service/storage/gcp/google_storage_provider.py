@@ -7,9 +7,14 @@ class GoogleStorageProvider(IStorageProvider):
     def __init__(self):
         self._set_client()
     
-    def upload_file(self, bucket_name: str, storage_path: str):
+    def upload_file(
+        self, 
+        bucket_name: str, 
+        storage_path: str,
+        local_path: str
+    ):
         blob = self._get_blob(bucket_name, storage_path)
-        blob.upload_from_file_name(storage_path)
+        blob.upload_from_file_name(local_path)
         
         assert blob.exists()
     

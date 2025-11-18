@@ -4,7 +4,12 @@ from airflow.sdk import Connection
 class IStorageProvider(ABC):
     
     @abstractmethod
-    def upload_file(self, bucket_name: str, file_name: str) -> bool: 
+    def upload_file(
+        self, 
+        bucket_name: str, 
+        storage_path: str,
+        file_name: str
+    ) -> bool: 
         pass 
 
     @abstractmethod

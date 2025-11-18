@@ -9,9 +9,15 @@ class StorageProvider(IGenericStorageProvider):
     def __init__(self):
         self._set_config_provider()
 
-    def upload_file(self, bucket_identifier: str, file_name: str) -> bool:
+    def upload_file(
+        self, 
+        bucket_identifier: str, 
+        storage_path: str,
+        file_name: str
+    ) -> bool:
         return self._get_provider().upload_file(
             self._get_bucket_name(bucket_identifier), 
+            storage_path,
             file_name
         )
     
